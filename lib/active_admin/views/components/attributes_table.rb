@@ -17,13 +17,20 @@ module ActiveAdmin
         attrs.each {|attr| row(attr) }
       end
 
-      def row(attr, &block)
+      def row(*args, &block)
+        options = args.extract_options!
+        data    = args[0]
+
+        if options[:empty]
+          @table << tr(class: 'empty') { th and td } and return
+        end
+
         @table << tr do
           th do
-            header_content_for(attr)
+            options[:name] || header_content_for(data)
           end
           td do
-            content_for(block || attr)
+            content_for(block || data)
           end
         end
       end
