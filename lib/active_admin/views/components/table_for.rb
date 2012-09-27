@@ -32,7 +32,7 @@ module ActiveAdmin
         # Add a table cell for each item
         @collection.each_with_index do |item, i|
           within @tbody.children[i] do
-            build_table_cell(col, item)
+            build_table_cell(col, item, options)
           end
         end
       end
@@ -84,9 +84,16 @@ module ActiveAdmin
         end
       end
 
-      def build_table_cell(col, item)
+      def build_table_cell(col, item, options={})
         td(:class => (col.data.to_s.downcase if col.data.is_a?(Symbol))) do
           rvalue = call_method_or_proc_on(item, col.data, :exec => false)
+
+          if options[:currency]
+            currency_options = {}
+            currency_options.merge!(options[:currency]) if options[:currency].is_a?(Hash)
+            rvalue = number_to_currency(rvalue, currency_options)
+          end
+
           if col.data.is_a?(Symbol)
             rvalue = pretty_format(rvalue)
           end

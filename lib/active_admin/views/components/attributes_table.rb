@@ -18,9 +18,9 @@ module ActiveAdmin
       end
 
       def row(*args, &block)
-        options = args.extract_options!
-        title   = args[0]
-        data    = args[1] || args[0]
+        options   = args.extract_options!
+        title     = args[0]
+        data      = args[1] || args[0]
 
         if options[:empty]
           @table << tr(class: 'empty') { th and td } and return
@@ -31,7 +31,7 @@ module ActiveAdmin
             header_content_for(title)
           end
           td do
-            content_for(block || data)
+            content_for(block || data, options)
           end
         end
       end
@@ -58,13 +58,20 @@ module ActiveAdmin
         span I18n.t('active_admin.empty'), :class => "empty"
       end
 
-      def content_for(attr_or_proc)
+      def content_for(attr_or_proc, options={})
         value = case attr_or_proc
                 when Proc
                   attr_or_proc.call(@record)
                 else
                   content_for_attribute(attr_or_proc)
                 end
+
+        if options[:currency]
+          currency_options = {}
+          currency_options.merge!(options[:currency]) if options[:currency].is_a?(Hash)
+          value = number_to_currency(value, currency_options)
+        end
+
         value = pretty_format(value)
         value == "" || value.nil? ? empty_value : value
       end
