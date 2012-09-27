@@ -9,7 +9,7 @@ module ActiveAdmin
     #
     # == Simple Columns
     #
-    # To display columns, use the #columns method. Within the block, call the 
+    # To display columns, use the #columns method. Within the block, call the
     # #column method to create a new column.
     #
     # To createa a two column layout:
@@ -101,10 +101,7 @@ module ActiveAdmin
       end
 
       def columns_span_count
-        count = 0
-        children.each {|column| count += column.span_size }
-
-        count
+        children.sum(&:span_size)
       end
 
     end
@@ -129,17 +126,9 @@ module ActiveAdmin
         column_with_span_width = (span_size * column_width) + ((span_size - 1) * margin_width)
 
         styles = []
-
         styles << "width: #{column_with_span_width}%;"
-
-        if max_width
-          styles << "max-width: #{max_width};"
-        end
-
-        if min_width
-          styles << "min-width: #{min_width};"
-        end
-
+        styles << "max-width: #{max_width};" if max_width
+        styles << "min-width: #{min_width};" if min_width
         styles << "margin-right: #{margin_width}%;" unless is_last_column
 
         set_attribute :style, styles.join(" ")
