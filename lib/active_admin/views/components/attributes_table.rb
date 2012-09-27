@@ -19,7 +19,8 @@ module ActiveAdmin
 
       def row(*args, &block)
         options = args.extract_options!
-        data    = args[0]
+        title   = args[0]
+        data    = args[1] || args[0]
 
         if options[:empty]
           @table << tr(class: 'empty') { th and td } and return
@@ -27,7 +28,7 @@ module ActiveAdmin
 
         @table << tr do
           th do
-            options[:name] || header_content_for(data)
+            header_content_for(title)
           end
           td do
             content_for(block || data)
@@ -42,10 +43,14 @@ module ActiveAdmin
       end
 
       def header_content_for(attr)
-        if @record.class.respond_to?(:human_attribute_name)
-          @record.class.human_attribute_name(attr, :default => attr.to_s.titleize)
+        if attr.is_a?(Symbol)
+          if @record.class.respond_to?(:human_attribute_name)
+            @record.class.human_attribute_name(attr, :default => attr.to_s.titleize)
+          else
+            attr.to_s.titleize
+          end
         else
-          attr.to_s.titleize
+          attr
         end
       end
 
