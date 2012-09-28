@@ -67,6 +67,7 @@ module ActiveAdmin
         classes << "sorted-#{current_sort[1]}"        if sort_key && current_sort[0] == sort_key
         classes << col.data.to_s.downcase.underscore  if col.data.is_a?(Symbol)
         classes << col.title.to_s.downcase.underscore if [Symbol, String].include?(col.title.class)
+        classes << col.classes
 
         if sort_key
           th :class => classes do
@@ -85,7 +86,15 @@ module ActiveAdmin
       end
 
       def build_table_cell(col, item, options={})
-        td(:class => (col.data.to_s.downcase if col.data.is_a?(Symbol))) do
+        cell_class = if options[:class]
+                       options[:class]
+                     elsif col.data.is_a?(Symbol)
+                       col.data.to_s.downcase
+                     else
+                       nil
+                     end
+
+        td(:class => cell_class) do
           rvalue = call_method_or_proc_on(item, col.data, :exec => false)
 
           if options[:currency]
@@ -130,7 +139,7 @@ module ActiveAdmin
 
       class Column
 
-        attr_accessor :title, :data
+        attr_accessor :title, :data, :classes
 
         def initialize(*args, &block)
           @options = args.extract_options!
@@ -139,6 +148,7 @@ module ActiveAdmin
           @data  = args[1] || args[0]
           @data = block if block
           @resource_class = args[2]
+          @classes = @options[:class]
         end
 
         def sortable?
