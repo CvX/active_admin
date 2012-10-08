@@ -59,6 +59,10 @@ module ActiveAdmin
       config.set_page_presenter :form, ActiveAdmin::PagePresenter.new(options, &block)
     end
 
+    def before_page(options = {}, &block)
+      config.set_page_presenter :before_page, ActiveAdmin::PagePresenter.new(options, &block)
+    end
+
     # Configure the CSV format
     #
     # For example:

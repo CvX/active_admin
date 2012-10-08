@@ -75,8 +75,19 @@ module ActiveAdmin
         def build_main_content_wrapper
           div :id => "main_content_wrapper" do
             div :id => "main_content" do
-              main_content
+              before_page_block
+              div do
+                main_content
+              end
             end
+          end
+        end
+
+        def before_page_block
+          config = active_admin_config.get_page_presenter(:before_page) || ActiveAdmin::PagePresenter.new
+
+          if config.block
+            instance_exec &config.block
           end
         end
 
