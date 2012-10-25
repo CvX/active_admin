@@ -28,7 +28,9 @@ module ActiveAdmin
       # Returns the method for the association chain when using
       # the scope_to option
       def method_for_association_chain
-        active_admin_config.scope_to_association_method || super
+        unless active_admin_config.scope_to.is_a? Proc
+          active_admin_config.scope_to_association_method || super
+        end
       end
 
     end
