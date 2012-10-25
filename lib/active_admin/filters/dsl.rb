@@ -7,6 +7,10 @@ module ActiveAdmin
         config.add_filter(attribute, options)
       end
 
+      def replace_filter(attribute, options = {})
+        config.replace_filter(attribute, options)
+      end
+
       # For docs, please see ActiveAdmin::Filters::ResourceExtension#delete_filter
       def remove_filter(attribute)
         config.remove_filter(attribute)

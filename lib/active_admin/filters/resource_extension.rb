@@ -46,6 +46,18 @@ module ActiveAdmin
         @preserve_default_filters == true
       end
 
+      def replace_filter(attribute, options={})
+        unless filters_enabled?
+          raise RuntimeError, "Can't replace a filter when filters are disabled. Enable filters with 'config.filters = true'"
+        end
+
+        @filters ||= default_filters
+
+        if filter = @filters.find {|f| f.fetch(:attribute) == attribute }
+          filter.clear.merge!(options).merge!(:attribute => attribute)
+        end
+      end
+
       # Remove a filter for this resource. If filters are not enabled, this method
       # will raise a RuntimeError
       #
