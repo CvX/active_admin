@@ -22,7 +22,7 @@ module ActiveAdmin
 
         def build_active_admin_head
           within @head do
-            insert_tag Arbre::HTML::Title, [title, render_or_call_method_or_proc_on(self, active_admin_application.site_title)].join(" | ")
+            insert_tag Arbre::HTML::Title, [title, page_title_postfix].join(" | ")
             active_admin_application.stylesheets.each do |style|
               text_node(stylesheet_link_tag(style.path, style.options.dup).html_safe)
             end
@@ -137,6 +137,20 @@ module ActiveAdmin
         # Renders the content for the footer
         def build_footer
           insert_tag view_factory.footer
+        end
+
+        def site_title_for(object)
+          title = render_or_call_method_or_proc_on(self, object.site_title)
+
+          if title.present?
+            title
+          else
+            nil
+          end
+        end
+
+        def page_title_postfix
+          site_title_for(active_admin_application) || site_title_for(active_admin_namespace) || "ActiveAdmin"
         end
 
       end
