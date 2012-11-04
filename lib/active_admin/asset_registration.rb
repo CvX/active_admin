@@ -18,8 +18,16 @@ module ActiveAdmin
 
     # Javascripts
 
-    def register_javascript(name)
-      javascripts << name
+    def register_javascript(name, options={})
+      options.reverse_merge!({
+        prepend: false
+      })
+
+      if options[:prepend]
+        javascripts.unshift(name)
+      else
+        javascripts << name
+      end
     end
 
     def javascripts
@@ -31,17 +39,17 @@ module ActiveAdmin
     end
 
   end
-  
+
   # Wrapper class for stylesheet registration
   class Stylesheet
-    
+
     attr_reader :options, :path
-    
+
     def initialize(*args)
       @options = args.extract_options!
       @path = args.first if args.first
     end
-    
+
   end
-  
+
 end
