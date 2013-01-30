@@ -7,6 +7,10 @@ module ActiveAdmin
         config.add_filter(attribute, options)
       end
 
+      def move_filter_to_index(attribute, index)
+        config.move_filter_to_index(attribute, index)
+      end
+
       def replace_filter(attribute, options = {})
         config.replace_filter(attribute, options)
       end

@@ -58,6 +58,15 @@ module ActiveAdmin
         end
       end
 
+      def move_filter_to_index(attribute, index)
+        @filters ||= default_filters
+
+        if filter = @filters.find {|f| f.fetch(:attribute) == attribute }
+          @filters.delete(filter)
+          @filters.insert(index, filter)
+        end
+      end
+
       # Remove a filter for this resource. If filters are not enabled, this method
       # will raise a RuntimeError
       #
