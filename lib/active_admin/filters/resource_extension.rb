@@ -133,7 +133,8 @@ module ActiveAdmin
 
       def filters_sidebar_section
         ActiveAdmin::SidebarSection.new(:filters, :only => :index, :if => proc{ active_admin_config.filters.any? } ) do
-          active_admin_filters_form_for assigns[:search], active_admin_config.filters
+          url = self.send(assigns[:current_tab].url)
+          active_admin_filters_form_for assigns[:search], active_admin_config.filters, { url: url }
         end
       end
 
